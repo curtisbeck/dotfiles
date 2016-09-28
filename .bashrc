@@ -61,7 +61,7 @@ if [ "$color_prompt" = yes ]; then
 else
     # PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
     # CLB simplify cmd prompt
-    PS1='${debian_chroot:+($debian_chroot)}vbox:\w\$ '
+    PS1='${debian_chroot:+($debian_chroot)}vbox:\w$(__git_ps1 " (%s)")\$ '
 fi
 unset color_prompt force_color_prompt
 
@@ -177,7 +177,7 @@ command_not_found_handle() {
   shift
   args=( "$@" )
 
-  ec2_ip=$(~/get_ec2_ip.py "$command")
+  ec2_ip=$(get_ec2_ip.py "$command")
   if [ "$ec2_ip" != "" ]
   then
     ssh $ec2_ip
@@ -187,9 +187,11 @@ command_not_found_handle() {
   orig_command_not_found_handle "$command" "${args[@]}"
 }
 
+export GIT_PS1_SHOWDIRTYSTATE=1
 export SCALA_HOME=/usr/local/src/scala/scala-2.11.7
 export PATH=$SCALA_HOME/bin:$PATH
 
-export SPARK_HOME=/opt/spark-1.6.0-bin-hadoop2.6
+export SPARK_HOME=/opt/spark-2.0.0-bin-hadoop2.7
 export PATH=$SPARK_HOME/bin:$PATH
 
+export PATH=$PATH:~/projects/bin
