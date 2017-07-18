@@ -187,7 +187,13 @@ command_not_found_handle() {
   orig_command_not_found_handle "$command" "${args[@]}"
 }
 
+# python virtual env
+export WORKON_HOME=$HOME/.virtualenvs
+export PROJECT_HOME=$HOME/projects
+source /usr/local/bin/virtualenvwrapper.sh
+
 export GIT_PS1_SHOWDIRTYSTATE=1
+
 export SCALA_HOME=/usr/local/src/scala/scala-2.11.7
 export PATH=$SCALA_HOME/bin:$PATH
 
