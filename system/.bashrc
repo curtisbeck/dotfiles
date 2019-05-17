@@ -37,7 +37,7 @@ fi
 
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
-    xterm-color) color_prompt=yes;;
+    xterm-color|*-256color) color_prompt=yes;;
 esac
 
 # uncomment for a colored prompt, if the terminal has the capability; turned
@@ -56,12 +56,33 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
+# ANSI color codes
+RS="\[\033[0m\]"    # reset
+HC="\[\033[1m\]"    # hicolor
+UL="\[\033[4m\]"    # underline
+INV="\[\033[7m\]"   # inverse background and foreground
+FBLK="\[\033[30m\]" # foreground black
+FRED="\[\033[31m\]" # foreground red
+FGRN="\[\033[32m\]" # foreground green
+FYEL="\[\033[33m\]" # foreground yellow
+FBLE="\[\033[34m\]" # foreground blue
+FMAG="\[\033[35m\]" # foreground magenta
+FCYN="\[\033[36m\]" # foreground cyan
+FWHT="\[\033[37m\]" # foreground white
+BBLK="\[\033[40m\]" # background black
+BRED="\[\033[41m\]" # background red
+BGRN="\[\033[42m\]" # background green
+BYEL="\[\033[43m\]" # background yellow
+BBLE="\[\033[44m\]" # background blue
+BMAG="\[\033[45m\]" # background magenta
+BCYN="\[\033[46m\]" # background cyan
+BWHT="\[\033[47m\]" # background white
+
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+    # PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+      PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]:\[\033[01;33m\]$(__git_ps1)\[\033[00m\]\$ '
 else
-    # PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-    # CLB simplify cmd prompt
-    PS1='${debian_chroot:+($debian_chroot)}vbox:\w$(__git_ps1 " (%s)")\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
 unset color_prompt force_color_prompt
 
@@ -85,6 +106,9 @@ if [ -x /usr/bin/dircolors ]; then
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
 fi
+
+# colored GCC warnings and errors
+#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 # some more ls aliases
 alias ll='ls -alF'
@@ -115,89 +139,34 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# ssh-agent: begin setup
-# Note: ~/.ssh/environment should not be used, as it
-#       already has a different purpose in SSH.
-
-env=~/.ssh/agent.env
-
-# Note: Don't bother checking SSH_AGENT_PID. It's not used
-#       by SSH itself, and it might even be incorrect
-#       (for example, when using agent-forwarding over SSH).
-
-agent_is_running() {
-    if [ "$SSH_AUTH_SOCK" ]; then
-        # ssh-add returns:
-        #   0 = agent running, has keys
-        #   1 = agent running, no keys
-        #   2 = agent not running
-        ssh-add -l >/dev/null 2>&1 || [ $? -eq 1 ]
-    else
-        false
-    fi
-}
-
-agent_has_keys() {
-    ssh-add -l >/dev/null 2>&1
-}
-
-agent_load_env() {
-    . "$env" >/dev/null
-}
-
-agent_start() {
-    (umask 077; ssh-agent >"$env")
-    . "$env" >/dev/null
-}
-
-if ! agent_is_running; then
-    agent_load_env
-fi
-
-# if your keys are not stored in ~/.ssh/id_rsa.pub or ~/.ssh/id_dsa.pub, you'll need
-# to paste the proper path after ssh-add
-if ! agent_is_running; then
-    agent_start
-    ssh-add
-elif ! agent_has_keys; then
-    ssh-add
-fi
-
-unset env
-# ssh-agent: end setup
-
-alias_function() {
-  eval "${1}() $(declare -f ${2} | sed 1d)"
-}
-
-alias_function orig_command_not_found_handle command_not_found_handle 
-
-command_not_found_handle() {
-  command=$1
-  shift
-  args=( "$@" )
-
-  ec2_ip=$(get_ec2_ip.py "$command")
-  if [ "$ec2_ip" != "" ]
-  then
-    ssh $ec2_ip
-    exit
-  fi
-
-  orig_command_not_found_handle "$command" "${args[@]}"
-}
-
-# python virtual env
+# python virtualenvwrapper setup
 export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$HOME/projects
 source /usr/local/bin/virtualenvwrapper.sh
 
-export GIT_PS1_SHOWDIRTYSTATE=1
+SSH_ENV="$HOME/.ssh/environment"
 
-export SCALA_HOME=/usr/local/src/scala/scala-2.11.7
-export PATH=$SCALA_HOME/bin:$PATH
+function start_agent {
+    echo "Initialising new SSH agent..."
+    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+    echo succeeded
+    chmod 600 "${SSH_ENV}"
+    . "${SSH_ENV}" > /dev/null
+    /usr/bin/ssh-add;
+}
 
-export SPARK_HOME=/opt/spark-2.0.0-bin-hadoop2.7
-export PATH=$SPARK_HOME/bin:$PATH
+# Source SSH settings, if applicable
 
-export PATH=$PATH:~/projects/bin
+if [ -f "${SSH_ENV}" ]; then
+    . "${SSH_ENV}" > /dev/null
+    #ps ${SSH_AGENT_PID} doesn't work under cywgin
+    ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+        start_agent;
+    }
+else
+    start_agent;
+fi
+
+# Airflow
+export AIRFLOW_HOME=$HOME/projects/OpenMail/mle/airflow
+
