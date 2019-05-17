@@ -167,3 +167,6 @@ else
     start_agent;
 fi
 
+# Airflow
+export AIRFLOW_HOME=$HOME/projects/OpenMail/mle/airflow
+
