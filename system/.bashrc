@@ -142,7 +142,14 @@ fi
 # python virtualenvwrapper setup
 export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$HOME/projects
-source /usr/local/bin/virtualenvwrapper.sh
+VIRTUALENVWRAPPER=/usr/local/bin/virtualenvwrapper.sh
+if test -f "$VIRTUALENVWRAPPER"; then
+  source $VIRTUALENVWRAPPER
+fi
+VIRTUALENVWRAPPER=$HOME/.local/bin/virtualenvwrapper.sh
+if test -f "$VIRTUALENVWRAPPER"; then
+  source $VIRTUALENVWRAPPER
+fi
 
 SSH_ENV="$HOME/.ssh/environment"
 
