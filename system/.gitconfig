@@ -1,0 +1,10 @@
+[user]
+	email = curtis.beck@gmail.com
+	name = curtis
+[push]
+	default = simple
+[alias]
+[alias]
+[alias]
+[alias]
+	branch-prune = remote prune origin
