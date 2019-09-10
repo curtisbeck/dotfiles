@@ -1,4 +1,6 @@
 # airflow
+alias airflow-up='docker-compose --file=docker-compose.airflow.mle.yml up --build'
+alias airflow-down='docker-compose --file=docker-compose.airflow.mle.yml down'
 alias workon-airflow='workon airflow & cd $HOME/projects/OpenMail/mle/airflow'
 alias airflow-worker-ips='aws ec2 describe-instances --filters Name=tag:Name,Values=mle-air_work_prod | jq -r .Reservations[].Instances[].PrivateIpAddress'
 alias airflow-worker-containers='for ip in $( airflow-worker-ips ); do echo "**** $ip ****"; ssh $ip docker ps; echo; done'
@@ -27,4 +29,4 @@ alias console_master='psql -h console-prod-pg.c5qqqpnwarmx.us-west-2.rds.amazona
 alias optdb='mysql -unate -hoptdb.c5qqqpnwarmx.us-west-2.rds.amazonaws.com -Doptdb -phoPKDVpx9BcdMfD5gkbw'
 alias ipyspark='PYSPARK_PYTHON=python2 PYSPARK_DRIVER_PYTHON=ipython2 pyspark'
 alias ipyspark3='PYSPARK_PYTHON=python3 PYSPARK_DRIVER_PYTHON=ipython3 pyspark'
-
+alias krs1='psql -h keyword-repository-prod.c5qqqpnwarmx.us-west-2.rds.amazonaws.com -dKRS1 -p 5432 -U KRS1_user'
