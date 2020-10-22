@@ -1,6 +1,9 @@
 [user]
 	email = curtis.beck@gmail.com
 	name = curtis
+[fetch]
+	prune = true
+	pruneTags = true
 [push]
 	default = simple
 [alias]
