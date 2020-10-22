@@ -34,3 +34,8 @@ alias optdb='mysql -unate -hoptdb.c5qqqpnwarmx.us-west-2.rds.amazonaws.com -Dopt
 alias ipyspark='PYSPARK_PYTHON=python2 PYSPARK_DRIVER_PYTHON=ipython2 pyspark'
 alias ipyspark3='PYSPARK_PYTHON=python3 PYSPARK_DRIVER_PYTHON=ipython3 pyspark'
 alias krs1='psql -h keyword-repository-prod.c5qqqpnwarmx.us-west-2.rds.amazonaws.com -dKRS1 -p 5432 -U KRS1_user'
+alias influxdb-prod='influx -host influxdb-prod-us-west-2.system1.company'
+alias influxdb-stage='influx -host influxdb-stage-us-west-2.system1.company'
+
+alias chmod-docker-socket='sudo chmod 666 /var/run/docker.sock'
+
