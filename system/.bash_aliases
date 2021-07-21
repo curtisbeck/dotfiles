@@ -14,6 +14,7 @@ alias gwilym='ssh gwilym'
 alias tail_dmp='python tail_alerts.py -f | grep dumptruck'
 
 # aws cli
+alias ca-login='aws --region us-west-2 codeartifact login --tool pip --repository python --domain s1-packages --domain-owner 364189071156'
 alias ecr-login='$(aws ecr get-login --no-include-email --region us-west-2)'
 
 # database
