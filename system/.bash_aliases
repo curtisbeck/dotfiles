@@ -38,5 +38,12 @@ alias krs1='psql -h keyword-repository-prod.c5qqqpnwarmx.us-west-2.rds.amazonaws
 alias influxdb-prod='influx -host influxdb-prod-us-west-2.system1.company'
 alias influxdb-stage='influx -host influxdb-stage-us-west-2.system1.company'
 
+# vpn
+alias vpn-start='openvpn3 session-start --config system1'
+alias vpn-stop='openvpn3 session-manage --disconnect --config system1'
+alias vpn-pause='openvpn3 session-manage --pause --config system1'
+alias vpn-restart='openvpn3 session-manage --restart --config system1'
+alias vpn-resume='vpn-restart'
+
 alias chmod-docker-socket='sudo chmod 666 /var/run/docker.sock'
 
