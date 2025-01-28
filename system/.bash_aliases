@@ -7,12 +7,6 @@ alias airflow-worker-ips='aws ec2 describe-instances --filters Name=tag:Name,Val
 alias airflow-worker-containers='for ip in $( airflow-worker-ips ); do echo "**** $ip ****"; ssh $ip docker ps; echo; done'
 alias airflow-worker-ps='for ip in $( airflow-worker-ips ); do echo "**** $ip ****"; ssh $ip ps -elf; echo; done'
 
-# ssh
-alias gwilym='ssh gwilym'
-
-# alerts
-alias tail_dmp='python tail_alerts.py -f | grep dumptruck'
-
 # aws cli
 alias ca-login='aws --region us-west-2 codeartifact login --tool pip --repository python --domain s1-packages --domain-owner 364189071156'
 alias ecr-login='$(aws ecr get-login --no-include-email --region us-west-2)'
@@ -37,13 +31,6 @@ alias ipyspark3='PYSPARK_PYTHON=python3 PYSPARK_DRIVER_PYTHON=ipython3 pyspark'
 alias krs1='psql -h keyword-repository-prod.c5qqqpnwarmx.us-west-2.rds.amazonaws.com -dKRS1 -p 5432 -U KRS1_user'
 alias influxdb-prod='influx -host influxdb-prod-us-west-2.system1.company'
 alias influxdb-stage='influx -host influxdb-stage-us-west-2.system1.company'
-
-# vpn
-alias vpn-start='openvpn3 session-start --config system1'
-alias vpn-stop='openvpn3 session-manage --disconnect --config system1'
-alias vpn-pause='openvpn3 session-manage --pause --config system1'
-alias vpn-restart='openvpn3 session-manage --restart --config system1'
-alias vpn-resume='vpn-restart'
 
 alias chmod-docker-socket='sudo chmod 666 /var/run/docker.sock'
 
