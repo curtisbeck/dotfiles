@@ -1,0 +1,12 @@
+#!/usr/bin/env zsh
+
+###############################
+# EXPORT ENVIRONMENT VARIABLE #
+###############################
+
+export TERM='rxvt-256color'
+export DOTFILES="$HOME/projects/dotfiles"
+
+export HISTFILE=$HOME/.local/.zsh_history
+export HISTSIZE=10000
+export SAVEHIST=$HISTSIZE
